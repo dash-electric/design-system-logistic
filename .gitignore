@@ -6,3 +6,8 @@ apps/docs/dist/
 *.log
 .DS_Store
 .vite/
+
+# env / secrets
+.env
+.env.*
+!.env.example
