@@ -36,7 +36,7 @@ const buttonVariants = cva(
     "inline-flex items-center justify-center font-medium",
     "transition-[background-color,color,border-color,box-shadow] duration-(--duration-fast) ease-(--ease-out)",
     "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-(--primary-alpha-10) focus-visible:ring-offset-2 focus-visible:ring-offset-bg-white-0",
-    "disabled:pointer-events-none disabled:bg-bg-weak-50 disabled:text-text-disabled-300 disabled:border-transparent disabled:shadow-none",
+    "cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-none disabled:bg-bg-weak-50 disabled:text-text-disabled-300 disabled:border-transparent disabled:shadow-none",
     "select-none",
     "[&_svg]:shrink-0",
   ].join(" "),
@@ -52,14 +52,14 @@ const buttonVariants = cva(
         xs: "h-7 px-2.5 py-1 text-sm rounded-lg gap-0.5 [&_svg]:size-4",
         sm: "h-8 px-2.5 py-1.5 text-sm rounded-lg gap-0.5 [&_svg]:size-4",
         md: "h-9 px-3 py-2 text-sm rounded-lg gap-1 [&_svg]:size-5",
-        lg: "h-10 px-3.5 py-2.5 text-sm rounded-[10px] gap-1 [&_svg]:size-5",
-        xl: "h-11 px-4 text-base rounded-[10px] gap-1.5 [&_svg]:size-5",
+        lg: "h-10 px-3.5 py-2.5 text-sm rounded-sm gap-1 [&_svg]:size-5",
+        xl: "h-11 px-4 text-base rounded-sm gap-1.5 [&_svg]:size-5",
         // Icon-only square variants (Figma "Only Icon=On" — same pad/radius)
         "icon-xs": "size-7 rounded-lg [&_svg]:size-4",
         "icon-sm": "size-8 rounded-lg [&_svg]:size-4",
         "icon-md": "size-9 rounded-lg [&_svg]:size-5",
-        "icon-lg": "size-10 rounded-[10px] [&_svg]:size-5",
-        "icon-xl": "size-11 rounded-[10px] [&_svg]:size-5",
+        "icon-lg": "size-10 rounded-sm [&_svg]:size-5",
+        "icon-xl": "size-11 rounded-sm [&_svg]:size-5",
       },
       style: {
         // Figma canon: Filled | Stroke | Lighter | Ghost (4 styles).
@@ -77,15 +77,18 @@ const buttonVariants = cva(
       },
     },
     compoundVariants: [
-      // PRIMARY — source Figma mapping
-      { tone: "primary", style: "filled", className: "bg-primary text-static-white hover:bg-(--dash-purple-700) active:bg-(--dash-purple-800)" },
+      // PRIMARY — GSM: primary CTA is the one INK surface (purple is punctuation,
+      // never a button fill). Uses the inverse-surface token pair so it flips
+      // correctly in dark mode (ink→white bg, white→ink text). Purple stays on
+      // the stroke / lighter / ghost / link styles below.
+      { tone: "primary", style: "filled", className: "bg-bg-strong-950 text-text-white-0 hover:bg-bg-strong-950/90 active:bg-bg-strong-950/80" },
       { tone: "primary", style: "stroke", className: "bg-bg-white-0 border-primary text-primary hover:bg-(--primary-alpha-10) active:bg-(--primary-alpha-16)" },
       { tone: "primary", style: "lighter", className: "bg-(--primary-alpha-10) text-primary hover:bg-(--primary-alpha-16) active:bg-(--primary-alpha-24)" },
       { tone: "primary", style: "ghost", className: "text-primary hover:bg-(--primary-alpha-10) active:bg-(--primary-alpha-16)" },
       { tone: "primary", style: "link", className: "text-primary hover:underline underline-offset-4" },
 
       // NEUTRAL — source Figma mapping (sub-600 text, surface-800 fill, stroke-soft-200 border + shadow-regular-xs on stroke)
-      { tone: "neutral", style: "filled", className: "bg-bg-surface-800 text-static-white hover:bg-bg-strong-950 active:bg-bg-strong-950/90" },
+      { tone: "neutral", style: "filled", className: "bg-bg-surface-800 text-text-white-0 hover:bg-bg-strong-950 active:bg-bg-strong-950/90" },
       { tone: "neutral", style: "stroke", className: "bg-bg-white-0 border-stroke-soft-200 text-text-sub-600 shadow-xs hover:bg-bg-weak-50 hover:text-text-strong-950 active:bg-bg-weak-50" },
       { tone: "neutral", style: "lighter", className: "bg-bg-weak-50 text-text-sub-600 hover:bg-bg-soft-200 hover:text-text-strong-950 active:bg-bg-soft-200" },
       { tone: "neutral", style: "ghost", className: "text-text-sub-600 hover:bg-bg-weak-50 hover:text-text-strong-950 active:bg-bg-soft-200" },

@@ -316,7 +316,7 @@ NumberBadge.displayName = "NumberBadge"
 
 /* -------------------------------------------------------------------------- */
 /* StatusBadge — Figma node 2939:19545 (separate spec from Badge)              */
-/* Chip with rounded-[6px], padding asymmetric pl-1 pr-2 py-1.                */
+/* Chip with rounded-sm, padding asymmetric pl-1 pr-2 py-1.                */
 /* 4 variants: dot-stroke / icon-stroke / dot-light / icon-light.             */
 /* -------------------------------------------------------------------------- */
 
@@ -415,7 +415,7 @@ const StatusBadge = React.forwardRef<HTMLSpanElement, StatusBadgeProps>(
         data-status={status}
         data-variant={variant}
         className={cn(
-          "inline-flex items-center font-medium rounded-[6px] py-1 pl-1 pr-2",
+          "inline-flex items-center font-medium rounded-sm py-1 pl-1 pr-2",
           size === "sm" ? "text-xs leading-4" : "text-sm leading-5",
           isDot ? "gap-0.5" : "gap-1",
           isStroke

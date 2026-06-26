@@ -71,11 +71,12 @@ const PaginationButton = React.forwardRef<HTMLButtonElement, PaginationButtonPro
       data-active={isActive ? "true" : undefined}
       data-shape={shape}
       className={cn(
-        // Figma cell: 32×32, font-medium 14/20
-        "inline-flex h-8 min-w-8 items-center justify-center px-2 text-sm font-medium",
+        // Figma cell: 32×32, font-medium 14/20. Tabular figures so page numbers
+        // don't shift width (GSM rule 02 / number-tabular).
+        "inline-flex h-8 min-w-8 items-center justify-center px-2 text-sm font-medium tabular-nums",
         shape === "full" ? "rounded-full" : "rounded-lg",
         // Default cell: white bg + stroke-soft + sub text
-        "border border-stroke-soft-200 bg-bg-white-0 text-text-sub-600 transition-colors",
+        "cursor-pointer border border-stroke-soft-200 bg-bg-white-0 text-text-sub-600 transition-colors",
         // Hover cell: bg-weak-50 + drop stroke (Figma hover variant has no stroke)
         "hover:border-transparent hover:bg-bg-weak-50 hover:text-text-strong-950",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-base",

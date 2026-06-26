@@ -4,9 +4,11 @@ The Dash Design System UI atoms, **re-themed for Dash Logistic** — packaged as
 installable npm library plus a live component gallery.
 
 - **`packages/logistic-kit`** — [`@dash-electric/logistic-kit`](./packages/logistic-kit/README.md).
-  51 atoms (raw `.tsx`) + a self-contained token layer. Dash Purple `#5E2AAC`
-  stays the primary (family identity); a **delivery-orange `#EA580C`** accent is
-  exposed for queue badges, batch progress, and package-state pills.
+  51 atoms (raw `.tsx`) + a self-contained token layer that encodes the Dash
+  Logistic **Graphic Standard Manual**: editorial restraint, Ink `#171717` /
+  White / Neutral `#5C5C5C` + greys, hairline rules (no shadows), and **one
+  accent — Dash Purple `#5E2AAC`** used like punctuation. Plus Jakarta Sans +
+  JetBrains Mono.
 - **`apps/docs`** — a Vite + React **component gallery** to browse every atom
   with live demos, search, and light/dark toggle.
 
@@ -42,12 +44,18 @@ Other scripts (from the repo root):
 ## Theme
 
 The whole theme lives in one file:
-[`packages/logistic-kit/src/styles/tokens.css`](./packages/logistic-kit/src/styles/tokens.css).
-It contains `@import "tailwindcss"`, the full Layer-0 foundation (neutral ramps,
-type scale, radius, spacing, shadow, motion, semantic surfaces, light + dark),
-the **logistic delivery-orange accent overlay**, and the Tailwind v4 `@theme`
-mapping that turns tokens into utilities (`bg-bg-white-0`, `text-text-strong-950`,
-`bg-primary`, `bg-accent`, …).
+[`packages/logistic-kit/src/styles/tokens.css`](./packages/logistic-kit/src/styles/tokens.css),
+which encodes the Dash Logistic **Graphic Standard Manual**
+([`logistic-knowledge-vault/docs/brand/gsm.md`](../logistic-knowledge-vault/docs/brand/gsm.md)).
+It contains `@import "tailwindcss"`, the GSM foundation (Ink/White/Neutral +
+greys, hairline rules at 10%/22% black, hairline-forward elevation, the GSM type
+scale, light + dark), the single Dash Purple accent, and the Tailwind v4
+`@theme` mapping that turns tokens into utilities (`bg-bg-white-0`,
+`text-text-strong-950`, `bg-primary`, `bg-accent`, `border-rule`, `bg-tint`, …).
+
+Per the GSM: **purple is punctuation** (logo, eyebrow numerals, live dots,
+selection) — never a fill on text blocks, large backgrounds, or buttons. Status
+color is operational data, exempt from the one-accent rule.
 
 ## Relationship to the parent Design System
 

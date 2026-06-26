@@ -122,7 +122,77 @@ const Row = ({ children }: { children: React.ReactNode }) => (
   <div className="flex flex-wrap items-center gap-3">{children}</div>
 )
 
+const Swatch = ({ color, name, hex, ring }: { color: string; name: string; hex: string; ring?: boolean }) => (
+  <div className="flex items-center gap-3">
+    <span
+      className={`size-9 shrink-0 rounded-lg ${ring ? "border border-stroke-sub-300" : ""}`}
+      style={{ background: color }}
+    />
+    <div className="leading-tight">
+      <div className="text-sm font-medium text-text-strong-950">{name}</div>
+      <div className="gsm-mono text-xs text-text-sub-600">{hex}</div>
+    </div>
+  </div>
+)
+
 export const CATEGORIES: Category[] = [
+  {
+    id: "foundation",
+    title: "Brand foundation",
+    blurb: "The Logistic Graphic Standard Manual, encoded as tokens. One accent, ink + white + greys, hairline rules, Plus Jakarta + JetBrains Mono.",
+    demos: [
+      {
+        name: "Color system",
+        description: "One brand color, two anchors, greys. Color is information, not decoration.",
+        render: () => (
+          <div className="grid grid-cols-2 gap-4">
+            <Swatch color="var(--dash-purple-500)" name="Primary · Dash Purple" hex="#5E2AAC" />
+            <Swatch color="var(--dash-gray-950)" name="Ink" hex="#171717" />
+            <Swatch color="var(--dash-gray-0)" name="White" hex="#FFFFFF" ring />
+            <Swatch color="var(--dash-gray-600)" name="Neutral" hex="#5C5C5C" />
+            <Swatch color="var(--dash-black-alpha-10)" name="Rule" hex="10% black" ring />
+            <Swatch color="var(--dash-black-alpha-22)" name="Rule strong" hex="22% black" ring />
+          </div>
+        ),
+      },
+      {
+        name: "Type scale",
+        description: "Plus Jakarta Sans (200–800). Tighter tracking as type grows; tabular numerals on figures.",
+        render: () => (
+          <div className="space-y-2 text-text-strong-950">
+            <p className="gsm-huge text-4xl">Scan, sort, batch</p>
+            <p className="gsm-large text-2xl">Section head</p>
+            <p className="gsm-medium text-lg">Subhead</p>
+            <p className="gsm-lede text-base text-text-sub-600">Lede — the intro paragraph sets context in one calm line.</p>
+            <p className="gsm-body text-sm text-text-sub-600">Body copy carries the detail at a steady 400 weight.</p>
+            <p className="gsm-label text-xs text-text-sub-600">Label · UI chrome</p>
+            <p className="gsm-mono text-sm text-text-strong-950">Job.destination_type · BAG-90213</p>
+          </div>
+        ),
+      },
+      {
+        name: "Rules & tints",
+        description: "Hairlines separate ideas; whitespace carries weight. No glow, no gradients, no shadows.",
+        render: () => (
+          <div className="space-y-0">
+            <div className="flex items-center justify-between py-2 text-sm">
+              <span className="text-text-strong-950">First-mile pickup</span>
+              <span className="gsm-mono tabular text-text-sub-600">08:00</span>
+            </div>
+            <div className="h-px w-full bg-stroke-soft-200" />
+            <div className="flex items-center justify-between py-2 text-sm">
+              <span className="text-text-strong-950">Hub intake</span>
+              <span className="gsm-mono tabular text-text-sub-600">12:30</span>
+            </div>
+            <div className="h-px w-full bg-stroke-sub-300" />
+            <div className="mt-2 inline-block rounded bg-[color:var(--dash-black-alpha-4)] px-2 py-1">
+              <code className="gsm-mono text-xs text-text-strong-950">items.create</code>
+            </div>
+          </div>
+        ),
+      },
+    ],
+  },
   {
     id: "brand",
     title: "Brand & identity",
@@ -180,7 +250,7 @@ export const CATEGORIES: Category[] = [
   {
     id: "actions",
     title: "Actions",
-    blurb: "One primary action per region. Primary = Dash Purple. Quieter actions use neutral/ghost styles.",
+    blurb: "One primary action per region. The primary CTA is ink — Dash Purple is reserved for punctuation (stroke, links, selection), never a button fill.",
     demos: [
       {
         name: "Button",
@@ -203,7 +273,7 @@ export const CATEGORIES: Category[] = [
       },
       {
         name: "FancyButton",
-        description: "Elevated CTA with sanctioned top-down sheen. Use sparingly for hero actions.",
+        description: "Flat ink emphasis button (GSM-flattened — sheen + glow removed). Prefer Button for new work.",
         render: () => (
           <Row>
             <FancyButton>Confirm route</FancyButton>
@@ -370,7 +440,7 @@ export const CATEGORIES: Category[] = [
   {
     id: "feedback",
     title: "Feedback & status",
-    blurb: "Domain state labels only. The orange accent is reserved for logistics state — never a full orange screen.",
+    blurb: "Domain state labels only. Status color is operational data — not brand. Dash Purple stays reserved for punctuation.",
     demos: [
       {
         name: "Badge",

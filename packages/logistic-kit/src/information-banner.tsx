@@ -82,7 +82,7 @@ const InformationBanner = React.forwardRef<HTMLDivElement, InformationBannerProp
 
         <div className="overflow-hidden rounded-2xl">
           <div
-            className="flex transition-transform duration-500 ease-out"
+            className="flex transition-transform duration-300 ease-out"
             style={{ transform: `translateX(-${idx * 100}%)` }}
           >
             {slides.map((s) => (

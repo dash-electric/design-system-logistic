@@ -96,21 +96,27 @@ export function App() {
         <main className="min-w-0 flex-1">
           {/* Hero */}
           <section className="mb-10">
-            <p className="text-subheading-small uppercase text-[color:var(--theme-accent-base)]">
-              Dash Logistic
+            <p className="gsm-label flex items-center gap-2 text-xs text-text-sub-600">
+              <span className="inline-block size-1.5 rounded-full bg-accent" /> 01 · Dash Logistic
             </p>
-            <h1 className="mt-1 text-title-h3 text-text-strong-950">Component library</h1>
-            <p className="mt-3 max-w-2xl text-paragraph-large text-text-sub-600">
-              {TOTAL_COMPONENTS} re-themed Dash UI atoms for logistics ops surfaces. Dash Purple
-              stays the primary; a delivery-orange accent is reserved for queue, batch, and
-              package state. Light and dark, tabular numerals, reduced-motion safe.
+            <h1 className="gsm-large mt-2 text-[44px] text-text-strong-950">Component library</h1>
+            <p className="gsm-lede mt-3 max-w-2xl text-lg text-text-sub-600">
+              {TOTAL_COMPONENTS} Dash UI atoms themed to the Logistic Graphic Standard Manual.
+              Editorial restraint: ink on white, hairline rules, one accent used like punctuation.
+              Plus Jakarta Sans + JetBrains Mono, tabular numerals, light and dark, reduced-motion safe.
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-2 rounded-lg border border-stroke-soft-200 px-3 py-1.5 text-sm text-text-sub-600">
-                <span className="size-3.5 rounded-full bg-primary" /> Primary · Dash Purple #5E2AAC
+                <span className="size-3.5 rounded-full bg-accent" /> Accent · Dash Purple #5E2AAC
               </span>
               <span className="inline-flex items-center gap-2 rounded-lg border border-stroke-soft-200 px-3 py-1.5 text-sm text-text-sub-600">
-                <span className="size-3.5 rounded-full bg-accent" /> Accent · Delivery orange #EA580C
+                <span className="size-3.5 rounded-full bg-[color:var(--dash-gray-950)]" /> Ink #171717
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-lg border border-stroke-soft-200 px-3 py-1.5 text-sm text-text-sub-600">
+                <span className="size-3.5 rounded-full border border-stroke-sub-300 bg-bg-white-0" /> White
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-lg border border-stroke-soft-200 px-3 py-1.5 text-sm text-text-sub-600">
+                <span className="size-3.5 rounded-full bg-[color:var(--dash-gray-600)]" /> Neutral #5C5C5C
               </span>
             </div>
           </section>

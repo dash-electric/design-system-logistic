@@ -31,7 +31,7 @@ const linkButtonVariants = cva(
   cn(
     "inline-flex items-center gap-1 font-medium underline-offset-4 transition-colors",
     "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-(--primary-alpha-10) focus-visible:ring-offset-2 focus-visible:ring-offset-bg-white-0 rounded-sm",
-    "disabled:pointer-events-none disabled:text-text-disabled-300",
+    "cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-none disabled:text-text-disabled-300",
     "hover:underline",
   ),
   {

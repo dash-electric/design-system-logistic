@@ -36,7 +36,7 @@ const compactButtonVariants = cva(
     "inline-flex items-center justify-center shrink-0",
     "transition-[background-color,color,border-color,box-shadow] duration-(--duration-fast) ease-(--ease-out)",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--primary-alpha-24) focus-visible:ring-offset-1 focus-visible:ring-offset-bg-white-0",
-    "disabled:pointer-events-none disabled:bg-transparent disabled:text-text-disabled-300 disabled:border-transparent disabled:shadow-none",
+    "cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-none disabled:bg-transparent disabled:text-text-disabled-300 disabled:border-transparent disabled:shadow-none",
     "[&_svg]:shrink-0",
   ),
   {
@@ -51,7 +51,7 @@ const compactButtonVariants = cva(
       variant: {
         stroke: cn(
           "bg-bg-white-0 text-text-sub-600 border border-stroke-soft-200",
-          "shadow-[0_1px_2px_rgb(10_13_20_/_0.03)]",
+          "shadow-xs",
           "hover:bg-bg-weak-50 hover:text-text-strong-950",
           "active:bg-bg-soft-200",
         ),

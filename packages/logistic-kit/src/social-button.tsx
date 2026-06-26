@@ -22,7 +22,7 @@ import { cn } from "./lib/utils"
 const socialButtonVariants = cva(
   cn(
     "inline-flex items-center justify-center font-medium text-sm",
-    "transition-colors disabled:pointer-events-none disabled:opacity-50",
+    "cursor-pointer transition-colors disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
     "border",
     "[&_svg]:shrink-0",
@@ -51,9 +51,9 @@ const socialButtonVariants = cva(
       size: {
         // Figma canonical (Medium 40) — sm/lg/xl are Dash extensions
         sm: "h-9 px-3 rounded-lg gap-2 [&_svg]:size-4",
-        md: "h-10 px-4 rounded-[10px] gap-2 [&_svg]:size-5",  // Figma default
-        lg: "h-11 px-4 rounded-[10px] gap-2 [&_svg]:size-5",
-        xl: "h-12 px-6 rounded-[10px] gap-2.5 [&_svg]:size-5",
+        md: "h-10 px-4 rounded-sm gap-2 [&_svg]:size-5",  // Figma default
+        lg: "h-11 px-4 rounded-sm gap-2 [&_svg]:size-5",
+        xl: "h-12 px-6 rounded-sm gap-2.5 [&_svg]:size-5",
       },
       block: {
         true: "w-full",

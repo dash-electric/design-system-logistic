@@ -31,7 +31,7 @@ const iconButtonVariants = cva(
     "inline-flex items-center justify-center border border-transparent",
     "transition-[background-color,color,border-color,box-shadow] duration-(--duration-fast) ease-(--ease-out)",
     "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-(--primary-alpha-10) focus-visible:ring-offset-2 focus-visible:ring-offset-bg-white-0",
-    "disabled:pointer-events-none disabled:bg-bg-weak-50 disabled:text-text-disabled-300 disabled:border-transparent disabled:shadow-none",
+    "cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-none disabled:bg-bg-weak-50 disabled:text-text-disabled-300 disabled:border-transparent disabled:shadow-none",
   ),
   {
     variants: {
@@ -39,8 +39,8 @@ const iconButtonVariants = cva(
         xs: "size-7 rounded-lg [&_svg]:size-4",
         sm: "size-8 rounded-lg [&_svg]:size-4",
         md: "size-9 rounded-lg [&_svg]:size-5",
-        lg: "size-10 rounded-[10px] [&_svg]:size-5",
-        xl: "size-11 rounded-[10px] [&_svg]:size-5",
+        lg: "size-10 rounded-sm [&_svg]:size-5",
+        xl: "size-11 rounded-sm [&_svg]:size-5",
       },
       tone: {
         primary: "",
@@ -57,11 +57,13 @@ const iconButtonVariants = cva(
     },
     compoundVariants: [
       // source Figma mapping (mirrors Button)
-      { tone: "primary", style: "filled", className: "bg-primary text-static-white hover:bg-(--dash-purple-700) active:bg-(--dash-purple-800)" },
+      // PRIMARY filled = ink (GSM: purple is punctuation, never a fill). Purple
+      // stays on stroke / lighter / ghost. Inverse-surface pair = dark-safe.
+      { tone: "primary", style: "filled", className: "bg-bg-strong-950 text-text-white-0 hover:bg-bg-strong-950/90 active:bg-bg-strong-950/80" },
       { tone: "primary", style: "stroke", className: "bg-bg-white-0 border-primary text-primary hover:bg-(--primary-alpha-10) active:bg-(--primary-alpha-16)" },
       { tone: "primary", style: "lighter", className: "bg-(--primary-alpha-10) text-primary hover:bg-(--primary-alpha-16) active:bg-(--primary-alpha-24)" },
       { tone: "primary", style: "ghost", className: "text-primary hover:bg-(--primary-alpha-10) active:bg-(--primary-alpha-16)" },
-      { tone: "neutral", style: "filled", className: "bg-bg-surface-800 text-static-white hover:bg-bg-strong-950" },
+      { tone: "neutral", style: "filled", className: "bg-bg-surface-800 text-text-white-0 hover:bg-bg-strong-950" },
       { tone: "neutral", style: "stroke", className: "bg-bg-white-0 border-stroke-soft-200 text-text-sub-600 shadow-regular-xs hover:bg-bg-weak-50 hover:text-text-strong-950" },
       { tone: "neutral", style: "lighter", className: "bg-bg-weak-50 text-text-sub-600 hover:bg-bg-soft-200 hover:text-text-strong-950 active:bg-bg-soft-200" },
       { tone: "neutral", style: "ghost", className: "text-text-sub-600 hover:bg-bg-weak-50 hover:text-text-strong-950 active:bg-bg-soft-200" },

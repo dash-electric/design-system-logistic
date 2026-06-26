@@ -12,7 +12,7 @@ import { cn } from "./lib/utils"
  *      Inline row of pill items separated by a 20×20 chevron-right arrow.
  *      Item = 20×20 circle + 14px label (font-regular), no card chrome.
  *  - Step Indicator Vertical (3507:227) + Items (3507:190):
- *      Stacked pill items, each 36px tall with rounded-[10px] chrome. Active
+ *      Stacked pill items, each 36px tall with rounded-sm chrome. Active
  *      item has white bg + chevron-right at the tail; non-active items have
  *      bg-weak-50 fill.
  *  - Step Indicator Sidebar (3507:560): vertical inside a soft card.
@@ -78,8 +78,8 @@ const Step = React.forwardRef<HTMLLIElement, StepProps>(
         orientation === "horizontal"
           ? "items-center gap-2"
           : cn(
-              // Vertical item: full-width 36px pill with rounded-[10px] chrome
-              "flex-row items-center gap-2 rounded-[10px] px-2 py-2 min-h-9 w-full",
+              // Vertical item: full-width 36px pill with rounded-sm chrome
+              "flex-row items-center gap-2 rounded-sm px-2 py-2 min-h-9 w-full",
               status === "current" ? "bg-bg-white-0" : "bg-bg-weak-50",
             ),
         className,

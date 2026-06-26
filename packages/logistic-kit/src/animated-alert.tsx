@@ -38,7 +38,7 @@ const AnimatedAlert = React.forwardRef<HTMLDivElement, AnimatedAlertProps>(
         key={k}
         data-slot="animated-alert"
         className={cn(
-          "duration-500 animate-in fade-in zoom-in-95 slide-in-from-top-4",
+          "duration-300 animate-in fade-in zoom-in-95 slide-in-from-top-4",
           className,
         )}
       >

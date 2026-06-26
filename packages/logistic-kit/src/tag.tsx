@@ -39,7 +39,7 @@ const tagVariants = cva(
           "hover:bg-bg-white-0 hover:border-stroke-soft-200",
           "data-[state=active]:bg-bg-white-0 data-[state=active]:border-stroke-strong-950 data-[state=active]:text-text-strong-950",
         ),
-        primary: "bg-primary text-static-white",
+        primary: "bg-bg-strong-950 text-text-white-0",
       },
     },
     defaultVariants: { size: "sm", variant: "stroke" },

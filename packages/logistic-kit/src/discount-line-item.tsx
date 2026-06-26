@@ -49,7 +49,7 @@ const DiscountLineItem = React.forwardRef<HTMLDivElement, DiscountLineItemProps>
             <span className="text-xs text-text-sub-600">({percent}%)</span>
           )}
         </p>
-        <p className="text-sm font-medium text-(--state-success-base)">
+        <p className="text-sm font-medium tabular-nums text-(--state-success-base)">
           -{format(discountAmount)}
         </p>
       </div>

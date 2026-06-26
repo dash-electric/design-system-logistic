@@ -31,9 +31,9 @@ const inputRootVariants = cva(
         // Figma Small (36) — pad 8/8/8/10 · radius 8 · gap 8
         md: "h-9 rounded-lg pl-2.5 pr-2 py-2 text-sm gap-2",
         // Figma Medium (40) — pad 10/10/10/12 · radius 10 · gap 8
-        lg: "h-10 rounded-[10px] pl-3 pr-2.5 py-2.5 text-sm gap-2",
+        lg: "h-10 rounded-sm pl-3 pr-2.5 py-2.5 text-sm gap-2",
         // Dash extension (44) — used by some auth flows; not in Figma
-        xl: "h-11 rounded-[10px] pl-3.5 pr-3 py-2.5 text-base gap-2.5",
+        xl: "h-11 rounded-sm pl-3.5 pr-3 py-2.5 text-base gap-2.5",
       },
     },
     defaultVariants: { size: "lg" },

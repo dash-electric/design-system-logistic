@@ -59,7 +59,7 @@ const PriceWithDiscount = React.forwardRef<
         <p
           ref={ref as unknown as React.Ref<HTMLParagraphElement>}
           data-slot="price-with-discount"
-          className={cn(finalSizeClass[size], "text-text-strong-950", className)}
+          className={cn(finalSizeClass[size], "tabular-nums text-text-strong-950", className)}
         >
           {format(finalAmount || 0)}
         </p>
@@ -70,7 +70,7 @@ const PriceWithDiscount = React.forwardRef<
       <div
         ref={ref}
         data-slot="price-with-discount"
-        className={cn("flex items-center gap-2", className)}
+        className={cn("flex items-center gap-2 tabular-nums", className)}
       >
         <p className={cn(strikeSizeClass[size], "text-text-sub-600 line-through")}>
           {format(amount)}

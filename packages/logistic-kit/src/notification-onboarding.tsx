@@ -93,7 +93,7 @@ const NotificationOnboarding = React.forwardRef<
         {show && (
           <>
             <div
-              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]"
+              className="fixed inset-0 z-40 bg-black/40"
               onClick={dismiss}
             />
             <div className="absolute right-0 top-full z-50 mt-2 w-[280px]">
@@ -102,7 +102,7 @@ const NotificationOnboarding = React.forwardRef<
               </div>
               <div className="overflow-hidden rounded-2xl bg-bg-white-0 shadow-lg ring-1 ring-stroke-soft-200">
                 <div className="flex items-start gap-3 p-4">
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-[10px] bg-(--primary-alpha-10)">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-sm bg-(--primary-alpha-10)">
                     <Bell className="size-4 text-primary" />
                   </div>
                   <div className="min-w-0 flex-1">

@@ -33,7 +33,7 @@ const FancyLoader = React.forwardRef<HTMLDivElement, FancyLoaderProps>(
         ref={ref}
         data-slot="fancy-loader"
         className={cn(
-          "flex items-center justify-center bg-gradient-to-br from-bg-weak-50 to-bg-soft-200",
+          "flex items-center justify-center bg-bg-weak-50",
           inline ? "h-[480px] w-full rounded-2xl" : "fixed inset-0 z-50",
           className,
         )}

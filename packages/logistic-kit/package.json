@@ -1,7 +1,7 @@
 {
   "name": "@dash-electric/logistic-kit",
   "version": "0.1.0",
-  "description": "Dash Logistic Design System — the Dash UI atoms re-themed for Dash Logistic (delivery-orange accent). Ships raw .tsx + a self-contained token layer.",
+  "description": "Dash Logistic Design System — the Dash UI atoms themed to the Dash Logistic Graphic Standard Manual (ink + white + greys, Dash Purple as the one accent). Ships raw .tsx + a self-contained token layer.",
   "type": "module",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",

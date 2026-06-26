@@ -7,9 +7,14 @@ atoms, so they stay theme-able at build time.
 - **51 atoms** (Button, Badge, Input, Card, Table, Banner, Alert, FileUpload,
   Pagination, Stat, StepIndicator, …) — identical API surface to the parent
   `@dash-electric/kit`.
-- **Logistic theme baked in:** Dash Purple `#5e2aac` stays the primary
-  (family identity); a **delivery-orange `#ea580c`** accent is exposed for
-  queue badges, batch progress, "needs action" pulses, and package-state pills.
+- **Dash Logistic GSM baked in:** themed to the Logistic *Graphic Standard
+  Manual* — editorial restraint, **Ink `#171717` / White / Neutral `#5C5C5C`**
+  + four greys, **hairline rules** at 10% / 22% black (no shadows/glow), and
+  **one accent: Dash Purple `#5E2AAC`** used like punctuation (logo, eyebrow
+  numerals, live dots, selection) — never as a fill on text blocks or
+  backgrounds. Status color is treated as operational data, not brand.
+- **Type:** Plus Jakarta Sans (200–800) + JetBrains Mono (400–600), OpenType
+  `ss01/cv11/cv02`, tabular numerals on figures.
 - **Light + dark** via a `.dark` class on any ancestor.
 
 ## Install
@@ -33,9 +38,10 @@ module.exports = { transpilePackages: ["@dash-electric/logistic-kit"] }
 Vite transpiles `.tsx` from dependencies out of the box.
 
 **2. Import the token layer once at the app root.** It contains
-`@import "tailwindcss"`, the full Layer-0 foundation, the logistic accent
-overlay, and the Tailwind v4 `@theme` mapping that powers utilities like
-`bg-bg-white-0`, `text-text-strong-950`, `bg-primary`, and `bg-accent`:
+`@import "tailwindcss"`, the full GSM foundation (ink/white/neutral/greys,
+hairline rules, type scale), the single Dash Purple accent, and the Tailwind v4
+`@theme` mapping that powers utilities like `bg-bg-white-0`,
+`text-text-strong-950`, `bg-primary`, `bg-accent`, `border-rule`, and `bg-tint`:
 
 ```ts
 import "@dash-electric/logistic-kit/styles"
@@ -52,7 +58,7 @@ Vite/PostCSS plugin, add a source glob in your CSS:
 
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 ```
 
 ## Use
@@ -64,7 +70,7 @@ export function Toolbar() {
   return (
     <div className="flex items-center gap-2">
       <Button>Assign batch</Button>
-      <Badge variant="light" color="orange">In transit</Badge>
+      <Badge status="information">In transit</Badge>
     </div>
   )
 }
@@ -72,17 +78,33 @@ export function Toolbar() {
 
 ## Theming notes
 
-- **Primary** (`bg-primary`, `text-primary`, …) → Dash Purple. Use for the one
-  primary action per region.
-- **Accent** (`bg-accent`, `text-accent-700`, `border-accent`, …) → delivery
-  orange. Use as punctuation for logistics state — never a full orange screen.
-  Body text on accent surfaces uses `accent-700` minimum (AA).
-- Semantic state tokens (`success`, `warning`, `error`, `information`,
-  `feature`, `stable`, `verified`, `away`, `faded`) are unchanged from Layer 0.
+- **Accent** = **Primary** = **Dash Purple** (`bg-accent` / `bg-primary`,
+  `text-accent`, `border-accent`). The GSM mandates a single chromatic color.
+  Reserve it for *brand moments* — logo, eyebrow numerals, live-state dots,
+  selection, do-markers. **Never** wash a surface, text block, or button in it.
+- **Ink / White / Neutral** carry the page: `text-text-strong-950` (Ink
+  `#171717`), `bg-bg-white-0` (White), `text-text-sub-600` (Neutral `#5C5C5C`).
+- **Rules & tints:** `border-rule` (10% black hairline), `border-rule-strong`
+  (22%), `bg-tint` (4%), `bg-tint-strong` (7% hover). Prefer a hairline over a
+  shadow — elevation is hairline-forward, no glow.
+- **Status color is operational data, not brand:** the semantic state tokens
+  (`success`, `warning`, `error`, `information`, `feature`, `stable`,
+  `verified`, `away`, `faded`) carry meaning and are exempt from the
+  one-accent rule.
+- **Corners are sharp (2px).** `gsm.html` only ever uses a 2px radius (and
+  `50%` for dots), so the whole Tailwind radius scale is collapsed: every
+  `rounded-sm/md/lg/xl/2xl` resolves to **2px**. `rounded-full` is preserved
+  for dots, pills, avatars, and spinners. This is the GSM newspaper square —
+  don't reach for large radii.
+- **Elevation is a hairline ring, not a shadow.** `gsm.html`'s only elevation
+  primitive is `inset 0 0 0 1px var(--rule)`. Inline surfaces (cards, stroke
+  buttons, inputs) reproduce that flat ring; only floating overlays (modal,
+  popover, toast, tooltip) add the gentlest outer lift for legibility.
 
 ## Relationship to `@dash-electric/kit`
 
 This package is a **re-themed sibling**, not a fork of the component logic. The
 atom source is copied verbatim from the parent kit; only the token layer
-diverges (logistic accent overlay). Keep component changes upstream in the
-parent Design System and re-sync here.
+(`src/styles/tokens.css`) diverges — it encodes the Dash Logistic Graphic
+Standard Manual. Keep component changes upstream in the parent Design System and
+re-sync here.
