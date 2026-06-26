@@ -113,7 +113,7 @@ const buttonVariants = cva(
   },
 )
 
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+export type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "style"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
     loading?: boolean

@@ -58,7 +58,7 @@ export function App() {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search 51 components…"
+              placeholder="Search components…"
               className="w-44 bg-transparent text-sm text-text-strong-950 outline-none placeholder:text-text-soft-400"
             />
           </div>
@@ -101,7 +101,7 @@ export function App() {
             </p>
             <h1 className="gsm-large mt-2 text-[44px] text-text-strong-950">Component library</h1>
             <p className="gsm-lede mt-3 max-w-2xl text-lg text-text-sub-600">
-              {TOTAL_COMPONENTS} Dash UI atoms themed to the Logistic Graphic Standard Manual.
+              {TOTAL_COMPONENTS} Dash UI components themed to the Logistic Graphic Standard Manual.
               Editorial restraint: ink on white, hairline rules, one accent used like punctuation.
               Plus Jakarta Sans + JetBrains Mono, tabular numerals, light and dark, reduced-motion safe.
             </p>

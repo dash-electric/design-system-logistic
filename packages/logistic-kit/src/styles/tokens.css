@@ -442,14 +442,24 @@
   --radius-8: 2px;  --radius-10: 2px; --radius-12: 2px; --radius-16: 2px;
   --radius-20: 2px; --radius-24: 2px; --radius-28: 2px;
 
-  /* Shadow aliases (hairline-forward) */
+  /* Shadow aliases (hairline-forward). Every shadow utility the atoms use is
+     surfaced here and resolves to the GSM hairline/lift values in :root. */
+  --shadow-custom-shadows-x-small: var(--shadow-custom-shadows-x-small);
+  --shadow-custom-shadows-small:   var(--shadow-custom-shadows-small);
+  --shadow-custom-shadows-medium:  var(--shadow-custom-shadows-medium);
+  --shadow-custom-shadows-large:   var(--shadow-custom-shadows-large);
+  --shadow-tooltip: var(--shadow-tooltip);
   --shadow-card-lg: var(--shadow-custom-shadows-large);
   --shadow-card-md: var(--shadow-custom-shadows-medium);
   --shadow-card-sm: var(--shadow-custom-shadows-small);
   --shadow-card-xs: var(--shadow-custom-shadows-x-small);
+  --shadow-custom-lg: var(--shadow-custom-shadows-large);
   --shadow-custom-md: var(--shadow-custom-shadows-medium);
   --shadow-custom-sm: var(--shadow-custom-shadows-small);
+  --shadow-custom-xs: var(--shadow-custom-shadows-x-small);
   --shadow-regular-xs: var(--shadow-custom-shadows-x-small);
+  /* Switch thumb — subtle lift on the moving knob. */
+  --shadow-switch-thumb: 0 1px 2px 0 #1717172e, 0 0 0 1px var(--dash-black-alpha-10);
 }
 
 /* ============================================================

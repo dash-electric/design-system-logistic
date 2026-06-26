@@ -4,7 +4,7 @@ The Dash Design System UI atoms, **re-themed for Dash Logistic** — packaged as
 installable npm library plus a live component gallery.
 
 - **`packages/logistic-kit`** — [`@dash-electric/logistic-kit`](./packages/logistic-kit/README.md).
-  51 atoms (raw `.tsx`) + a self-contained token layer that encodes the Dash
+  97 components (raw `.tsx`) + a self-contained token layer that encodes the Dash
   Logistic **Graphic Standard Manual**: editorial restraint, Ink `#171717` /
   White / Neutral `#5C5C5C` + greys, hairline rules (no shadows), and **one
   accent — Dash Purple `#5E2AAC`** used like punctuation. Plus Jakarta Sans +
@@ -17,7 +17,7 @@ dash-logistic-design-system/
 ├── packages/
 │   └── logistic-kit/        # the publishable library
 │       └── src/
-│           ├── *.tsx        # 51 atoms (flat)
+│           ├── *.tsx        # 97 components (flat)
 │           ├── lib/utils.tsx
 │           ├── styles/tokens.css   # the theme: Layer-0 + logistic accent + @theme
 │           └── index.tsx    # barrel

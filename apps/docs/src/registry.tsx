@@ -135,7 +135,7 @@ const Swatch = ({ color, name, hex, ring }: { color: string; name: string; hex: 
   </div>
 )
 
-export const CATEGORIES: Category[] = [
+const BASE_CATEGORIES: Category[] = [
   {
     id: "foundation",
     title: "Brand foundation",
@@ -822,5 +822,9 @@ export const CATEGORIES: Category[] = [
     ],
   },
 ]
+
+import { MORE_CATEGORIES } from "./registry.more"
+
+export const CATEGORIES: Category[] = [...BASE_CATEGORIES, ...MORE_CATEGORIES]
 
 export const TOTAL_COMPONENTS = CATEGORIES.reduce((n, c) => n + c.demos.length, 0)

@@ -79,7 +79,7 @@ const iconButtonVariants = cva(
   },
 )
 
-type IconButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+type IconButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "style"> &
   VariantProps<typeof iconButtonVariants> & {
     asChild?: boolean
     "aria-label": string

@@ -4,9 +4,12 @@ The Dash Design System UI atoms, re-themed for **Dash Logistic**. Ships **raw
 `.tsx` source** + a **self-contained token layer** — your bundler transpiles the
 atoms, so they stay theme-able at build time.
 
-- **51 atoms** (Button, Badge, Input, Card, Table, Banner, Alert, FileUpload,
-  Pagination, Stat, StepIndicator, …) — identical API surface to the parent
-  `@dash-electric/kit`.
+- **97 components** — atoms (Button, Badge, Input, Card, Table, …) plus
+  overlays (Modal, Drawer, Sheet, Popover, Tooltip), menus (DropdownMenu,
+  Select, Combobox, Command), form controls (Checkbox, Radio, Switch, Slider,
+  ToggleGroup, InputOTP, Calendar, DatePicker), disclosure (Accordion, Tabs,
+  Collapsible), and data (DataTable, Chart, ProgressBar, Avatar). Identical API
+  surface to the parent `@dash-electric/kit`.
 - **Dash Logistic GSM baked in:** themed to the Logistic *Graphic Standard
   Manual* — editorial restraint, **Ink `#171717` / White / Neutral `#5C5C5C`**
   + four greys, **hairline rules** at 10% / 22% black (no shadows/glow), and
