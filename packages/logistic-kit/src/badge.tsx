@@ -170,7 +170,9 @@ function paddingClass(type: BadgeType): string {
     case "default":
       return "py-0.5 px-2"
     case "dot":
-      return "py-0 pl-0 pr-2"
+      // Match default badge insets (8px sides / 2px top-bottom). The dot is a
+      // small inline mark next to the label — no oversized leading box.
+      return "py-0.5 pl-2 pr-2"
     case "left-icon":
       return "py-0.5 pl-1 pr-2"
     case "right-icon":
@@ -248,12 +250,8 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
         {type === "dot" ? (
           <span
             aria-hidden
-            className="relative inline-flex size-4 shrink-0 items-center justify-center"
-          >
-            <span
-              className={cn("rounded-full size-1", dotFill(status, appearance, disabled))}
-            />
-          </span>
+            className={cn("size-1.5 shrink-0 rounded-full", dotFill(status, appearance, disabled))}
+          />
         ) : null}
         {type === "left-icon" ? (
           <span

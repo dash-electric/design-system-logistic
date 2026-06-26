@@ -20,6 +20,8 @@ import {
   LanguageSelect,
   SegmentedControl, SegmentedItem,
   Checkbox, CheckboxField,
+  Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
+  Badge,
   RadioGroup, RadioField,
   Switch,
   Slider,
@@ -164,6 +166,99 @@ function TogglePressDemo() {
         <ToggleGroupItem value="underline" aria-label="Underline"><RiUnderline /></ToggleGroupItem>
       </ToggleGroup>
     </Row>
+  )
+}
+
+/* Selectable table + BulkActionBar-on-selection */
+type SelRow = { id: string; status: "information" | "success" | "warning" | "error"; label: string; stops: number }
+const selRows: SelRow[] = [
+  { id: "BAG-90213", status: "information", label: "In transit", stops: 12 },
+  { id: "BAG-90214", status: "success", label: "Delivered", stops: 8 },
+  { id: "BAG-90215", status: "warning", label: "Delayed", stops: 5 },
+  { id: "BAG-90216", status: "information", label: "In transit", stops: 9 },
+  { id: "BAG-90217", status: "error", label: "Failed", stops: 3 },
+  { id: "BAG-90218", status: "success", label: "Delivered", stops: 14 },
+  { id: "BAG-90219", status: "information", label: "In transit", stops: 7 },
+  { id: "BAG-90220", status: "warning", label: "Delayed", stops: 6 },
+  { id: "BAG-90221", status: "success", label: "Delivered", stops: 11 },
+  { id: "BAG-90222", status: "information", label: "In transit", stops: 4 },
+]
+function SelectableTableDemo() {
+  const [sel, setSel] = React.useState<Set<string>>(new Set())
+  const allSel = sel.size === selRows.length
+  const someSel = sel.size > 0 && !allSel
+  const toggleAll = () => setSel(allSel ? new Set() : new Set(selRows.map((r) => r.id)))
+  const toggleOne = (id: string) =>
+    setSel((prev) => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  return (
+    <div className="max-w-xl">
+      <Table containerClassName="max-h-64 rounded-sm border border-stroke-soft-200">
+        <TableHeader sticky>
+          <TableRow>
+            <TableHead className="w-10">
+              <Checkbox
+                checked={allSel ? true : someSel ? "indeterminate" : false}
+                onCheckedChange={toggleAll}
+                aria-label="Select all rows"
+              />
+            </TableHead>
+            <TableHead>Bag ID</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="text-right">Stops</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {selRows.map((r) => (
+            <TableRow key={r.id} data-state={sel.has(r.id) ? "selected" : undefined}>
+              <TableCell>
+                <Checkbox
+                  checked={sel.has(r.id)}
+                  onCheckedChange={() => toggleOne(r.id)}
+                  aria-label={`Select ${r.id}`}
+                />
+              </TableCell>
+              <TableCell className="font-mono">{r.id}</TableCell>
+              <TableCell><Badge status={r.status} type="dot">{r.label}</Badge></TableCell>
+              <TableCell className="text-right tabular">{r.stops}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {sel.size > 0 && (
+        <BulkActionBar
+          selectedCount={sel.size}
+          onClear={() => setSel(new Set())}
+          actions={[
+            { id: "reassign", label: "Reassign", onClick: () => {} },
+            { id: "hold", label: "Hold at hub", onClick: () => {} },
+            { id: "cancel", label: "Cancel", tone: "destructive", onClick: () => {} },
+          ]}
+        />
+      )}
+    </div>
+  )
+}
+function BulkActionBarToggleDemo() {
+  const [open, setOpen] = React.useState(false)
+  return (
+    <div>
+      <Button tone="neutral" style="stroke" onClick={() => setOpen(true)}>Simulate 3 selected</Button>
+      {open && (
+        <BulkActionBar
+          selectedCount={3}
+          onClear={() => setOpen(false)}
+          actions={[
+            { id: "reassign", label: "Reassign", onClick: () => {} },
+            { id: "hold", label: "Hold at hub", onClick: () => {} },
+            { id: "cancel", label: "Cancel", tone: "destructive", onClick: () => {} },
+          ]}
+        />
+      )}
+    </div>
   )
 }
 
@@ -561,6 +656,11 @@ export const MORE_CATEGORIES: Category[] = [
     demos: [
       { name: "DataTable", description: "Sortable/paginated table (TanStack).", render: () => <div className="max-w-xl"><DataTable columns={bagColumns} data={bagData} /></div> },
       {
+        name: "Selectable table",
+        description: "Row selection + sticky header (scroll the rows) + BulkActionBar that opens on selection. Tick rows to see it.",
+        render: () => <SelectableTableDemo />,
+      },
+      {
         name: "Chart",
         description: "Recharts wrapper with themed tooltip.",
         render: () => (
@@ -640,18 +740,8 @@ export const MORE_CATEGORIES: Category[] = [
       },
       {
         name: "BulkActionBar",
-        description: "Selection action bar for tables.",
-        render: () => (
-          <BulkActionBar
-            selectedCount={3}
-            onClear={() => {}}
-            actions={[
-              { id: "reassign", label: "Reassign", onClick: () => {} },
-              { id: "hold", label: "Hold at hub", onClick: () => {} },
-              { id: "cancel", label: "Cancel", tone: "destructive", onClick: () => {} },
-            ]}
-          />
-        ),
+        description: "Selection action bar — fixed to the viewport bottom, opens only when rows are selected (see Selectable table). Click to preview.",
+        render: () => <BulkActionBarToggleDemo />,
       },
       { name: "Filter", description: "Multi-select filter chip + popover.", render: () => <FilterDemo /> },
       {

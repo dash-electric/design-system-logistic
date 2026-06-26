@@ -3,9 +3,18 @@
 import * as React from "react"
 import { cn } from "./lib/utils"
 
-const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
-  ({ className, ...props }, ref) => (
-    <div data-slot="table-wrapper" className="relative w-full overflow-auto">
+type TableProps = React.HTMLAttributes<HTMLTableElement> & {
+  /** Classes for the scroll wrapper — e.g. `max-h-64` so the body scrolls
+   * under a sticky header (`<TableHeader sticky>`). */
+  containerClassName?: string
+}
+
+const Table = React.forwardRef<HTMLTableElement, TableProps>(
+  ({ className, containerClassName, ...props }, ref) => (
+    <div
+      data-slot="table-wrapper"
+      className={cn("relative w-full overflow-auto", containerClassName)}
+    >
       <table
         ref={ref}
         data-slot="table"
@@ -17,18 +26,28 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
 )
 Table.displayName = "Table"
 
-const TableHeader = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <thead
-    ref={ref}
-    data-slot="table-header"
-    // Figma 587:5793 Table Header Cell: fill = #f7f7f7 (bg-weak-50), 1px bottom stroke (stroke-soft-200)
-    className={cn("bg-bg-weak-50 [&_tr]:border-b [&_tr]:border-stroke-soft-200", className)}
-    {...props}
-  />
-))
+type TableHeaderProps = React.HTMLAttributes<HTMLTableSectionElement> & {
+  /** Pin the header to the top of the scroll wrapper so rows scroll beneath
+   * it. Pair with `<Table containerClassName="max-h-…">`. */
+  sticky?: boolean
+}
+
+const TableHeader = React.forwardRef<HTMLTableSectionElement, TableHeaderProps>(
+  ({ className, sticky, ...props }, ref) => (
+    <thead
+      ref={ref}
+      data-slot="table-header"
+      // Figma 587:5793 Table Header Cell: fill = #f7f7f7 (bg-weak-50), 1px bottom stroke (stroke-soft-200)
+      className={cn(
+        "bg-bg-weak-50 [&_tr]:border-b [&_tr]:border-stroke-soft-200",
+        // Sticky cells carry their own opaque fill so scrolled rows pass under cleanly.
+        sticky && "[&_th]:sticky [&_th]:top-0 [&_th]:z-10 [&_th]:bg-bg-weak-50",
+        className,
+      )}
+      {...props}
+    />
+  ),
+)
 TableHeader.displayName = "TableHeader"
 
 const TableBody = React.forwardRef<
