@@ -6,9 +6,12 @@ import {
   routeColor, type LatLng,
   RiderBatchCard, TripCard, ItemRow, CapacityMeter, DispatchStatsBar, DispatchStatusBadge,
   StopSequenceList, type SequenceStop,
-  RouteProgress, NextStopCard, RiderStopManifest, ProofOfDeliveryCapture,
+  RiderMapView, RouteProgress, NextStopCard, RiderStopManifest, ProofOfDeliveryCapture,
   ETAChip, DistanceChip, DurationChip, WeightChip, VolumeChip,
+  HexZone, ActiveZoneChip, ConflictBanner,
 } from "@dash-electric/logistic-kit"
+import { RiCheckLine } from "@remixicon/react"
+import { latLngToCell, gridDisk } from "h3-js"
 
 const Row = ({ children }: { children: React.ReactNode }) => (
   <div className="flex flex-wrap items-center gap-4">{children}</div>
@@ -80,7 +83,7 @@ function LiveDispatchMap() {
 
 function StopSequenceDemo() {
   const stops = [
-    { id: "1", address: "Jl. Mujair Raya, Kios 14", color: routeColor(0), meta: "2 items · 24.6 km" },
+    { id: "1", address: "Jl. Mujair Raya, Kios 14", color: routeColor(0), meta: "2 items · delivered", locked: true, done: true },
     { id: "2", address: "Griya Jakarta, Jl. Mahoni A5", color: routeColor(0), meta: "4 items · 2.8 km" },
     { id: "3", address: "Jl. Kemang Raya 12", color: routeColor(0), meta: "1 item · 3.1 km" },
     { id: "4", address: "Jl. Ampera Raya 88", color: routeColor(0), meta: "3 items · 1.4 km" },
@@ -155,6 +158,115 @@ function RiderBatchDemo() {
   )
 }
 
+/* ── Full rider-app screen mockup ──────────────────────────────────────── */
+type RiderScreenStop = {
+  id: string
+  seq: number
+  lat: number
+  lng: number
+  address: string
+  items: number
+  etaLabel: string
+  distanceLabel: string
+}
+const RIDER_DONE: RiderScreenStop[] = [
+  { id: "d1", seq: 1, lat: -6.245, lng: 106.8, address: "Jl. Wijaya I No. 4", items: 2, etaLabel: "—", distanceLabel: "—" },
+  { id: "d2", seq: 2, lat: -6.252, lng: 106.795, address: "Apt. Senopati Suites 12A", items: 1, etaLabel: "—", distanceLabel: "—" },
+]
+const RIDER_ACTIVE: RiderScreenStop = { id: "a1", seq: 3, lat: -6.2615, lng: 106.799, address: "Jl. Kemang Raya 12, RT 4 / RW 2", items: 3, etaLabel: "6 min", distanceLabel: "1.2 km" }
+const RIDER_UPCOMING: RiderScreenStop[] = [
+  { id: "u1", seq: 4, lat: -6.27, lng: 106.81, address: "Griya Jakarta, Jl. Mahoni A5", items: 4, etaLabel: "14 min", distanceLabel: "2.8 km" },
+  { id: "u2", seq: 5, lat: -6.2785, lng: 106.82, address: "Jl. Ampera Raya 88", items: 1, etaLabel: "22 min", distanceLabel: "3.1 km" },
+  { id: "u3", seq: 6, lat: -6.266, lng: 106.824, address: "Ruko Cipete Blok C2", items: 2, etaLabel: "31 min", distanceLabel: "1.9 km" },
+  { id: "u4", seq: 7, lat: -6.256, lng: 106.83, address: "Jl. Pangeran Antasari 45", items: 3, etaLabel: "40 min", distanceLabel: "2.2 km" },
+]
+const RIDER_DRIVER = { lat: -6.2566, lng: 106.7944, heading: 145 }
+
+function RiderAppMockup() {
+  const color = routeColor(0)
+  const [upcoming, setUpcoming] = React.useState<RiderScreenStop[]>(RIDER_UPCOMING)
+
+  // Markers for the whole route: done (dimmed/check), active (highlighted), upcoming (renumbered after active).
+  const mapStops = [
+    ...RIDER_DONE.map((s) => ({ id: s.id, lat: s.lat, lng: s.lng, sequence: s.seq, state: "done" as const })),
+    { id: RIDER_ACTIVE.id, lat: RIDER_ACTIVE.lat, lng: RIDER_ACTIVE.lng, sequence: RIDER_ACTIVE.seq, state: "active" as const },
+    ...upcoming.map((s, i) => ({ id: s.id, lat: s.lat, lng: s.lng, sequence: RIDER_ACTIVE.seq + 1 + i, state: "planned" as const })),
+  ]
+  // Route AHEAD: driver → active → upcoming (recomputes on reorder).
+  const pathAhead = [
+    { lat: RIDER_DRIVER.lat, lng: RIDER_DRIVER.lng },
+    { lat: RIDER_ACTIVE.lat, lng: RIDER_ACTIVE.lng },
+    ...upcoming.map((s) => ({ lat: s.lat, lng: s.lng })),
+  ]
+  const seqStops = [
+    // Completed stops are locked — visible, but their order can't change.
+    ...RIDER_DONE.map((s) => ({
+      id: s.id, color, address: s.address, meta: `${s.items} items · delivered`, locked: true, done: true,
+    })),
+    // Upcoming stops are draggable.
+    ...upcoming.map((s) => ({
+      id: s.id, color, address: s.address, meta: `${s.items} items · ${s.distanceLabel} · ${s.etaLabel}`,
+    })),
+  ]
+
+  return (
+    <div className="mx-auto w-[390px] overflow-hidden rounded-[36px] border-[6px] border-[#171717] bg-[#171717] shadow-card-lg">
+      <div className="relative h-[800px] overflow-hidden rounded-[28px] bg-bg-white-0">
+        {/* status bar */}
+        <div className="flex items-center justify-between px-5 pt-3 pb-1 text-xs font-medium tabular-nums text-text-strong-950">
+          <span>09:41</span>
+          <span className="gsm-label text-[10px] text-text-soft-400">Trip BTH260626-BHNXXXU</span>
+          <span>100%</span>
+        </div>
+
+        {/* Live map with the route ahead */}
+        <RiderMapView
+          color={color}
+          stops={mapStops}
+          path={pathAhead}
+          driver={RIDER_DRIVER}
+          currentStopId={RIDER_ACTIVE.id}
+          className="h-[330px] w-full rounded-none"
+        />
+
+        {/* Bottom sheet */}
+        <div className="absolute inset-x-0 bottom-0 top-[368px] overflow-y-auto rounded-t-[20px] border-t border-stroke-soft-200 bg-bg-white-0 px-4 pt-3 pb-6 shadow-card-lg">
+          <div className="mx-auto mb-3 h-1 w-9 rounded-full bg-bg-soft-200" />
+          <RouteProgress done={2} total={7} etaLabel="ETA 16:40" />
+
+          <p className="gsm-label mt-4 mb-1.5 text-[10px] text-text-soft-400">Active stop</p>
+          <NextStopCard
+            sequence={RIDER_ACTIVE.seq}
+            color={color}
+            address={RIDER_ACTIVE.address}
+            recipient="Andi · 0812-3456-7890"
+            distanceLabel={RIDER_ACTIVE.distanceLabel}
+            etaLabel={RIDER_ACTIVE.etaLabel}
+            itemsLabel={`${RIDER_ACTIVE.items} items`}
+            onArrived={() => {}}
+            onNavigate={() => {}}
+            onCall={() => {}}
+          />
+
+          <div className="mt-5 mb-1.5 flex items-baseline justify-between">
+            <p className="gsm-label text-[10px] text-text-soft-400">Stops · drag upcoming to reorder</p>
+            <span className="text-[11px] tabular-nums text-text-soft-400">{RIDER_DONE.length} done · {upcoming.length} left</span>
+          </div>
+          <StopSequenceList
+            stops={seqStops}
+            onReorder={(ids) => setUpcoming((prev) => ids.map((id) => prev.find((s) => s.id === id)).filter(Boolean) as RiderScreenStop[])}
+            onRecalculate={() => {}}
+          />
+          <p className="mt-2 flex items-center gap-1.5 text-[11px] text-text-soft-400">
+            <RiCheckLine className="size-3.5 text-(--state-success-base)" />
+            Delivered stops are locked — their order can&apos;t change.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function PodDemo() {
   const [photos, setPhotos] = React.useState<{ id: string; url: string }[]>([])
   const [note, setNote] = React.useState("")
@@ -168,6 +280,40 @@ function PodDemo() {
         onNoteChange={setNote}
         onConfirm={() => {}}
       />
+    </div>
+  )
+}
+
+/* ── H3 zones on a live map ────────────────────────────────────────────── */
+const ZONE_DEFS = [
+  { center: [-6.2555, 106.802] as [number, number], name: "Kemang", color: routeColor(0) },
+  { center: [-6.2705, 106.815] as [number, number], name: "Cilandak", color: routeColor(2) },
+  { center: [-6.262, 106.832] as [number, number], name: "Pejaten", color: routeColor(1) },
+]
+function ZonesDemo() {
+  const zones = ZONE_DEFS.map((z) => ({ ...z, cells: gridDisk(latLngToCell(z.center[0], z.center[1], 8), 1) }))
+  const [activeId, setActiveId] = React.useState<string>("Kemang")
+  return (
+    <div className="relative max-w-2xl">
+      <DashMap className="h-80 w-full" fitTo={ZONE_DEFS.map((z) => ({ lat: z.center[0], lng: z.center[1] }))}>
+        {zones.map((z) => (
+          <HexZone
+            key={z.name}
+            cells={z.cells}
+            color={z.color}
+            active={z.name === activeId}
+            label={z.name}
+            onClick={() => setActiveId(z.name)}
+          />
+        ))}
+      </DashMap>
+      <div className="absolute left-3 top-3">
+        <ActiveZoneChip
+          name={activeId}
+          color={zones.find((z) => z.name === activeId)?.color}
+          onClear={() => setActiveId("")}
+        />
+      </div>
     </div>
   )
 }
@@ -242,6 +388,23 @@ export const MAP_CATEGORIES: Category[] = [
           return <MapLegend entries={entries} onToggle={(id) => setHidden((h) => ({ ...h, [id]: !h[id] }))} />
         },
       },
+      {
+        name: "HexZone (H3 zones)",
+        description: "Delivery zones as H3 hex cells on the live map, one color per zone. Click a zone to activate it; ActiveZoneChip shows the selection.",
+        render: () => <ZonesDemo />,
+      },
+      {
+        name: "ConflictBanner",
+        description: "Warns when zones overlap (a stop could route to two hubs). Error-toned with a resolve path.",
+        render: () => (
+          <div className="max-w-xl">
+            <ConflictBanner
+              conflicts={["Kemang ↔ Cilandak — 3 cells", "Cilandak ↔ Pejaten — 1 cell"]}
+              onResolve={() => {}}
+            />
+          </div>
+        ),
+      },
     ],
   },
   {
@@ -293,7 +456,7 @@ export const MAP_CATEGORIES: Category[] = [
           </Row>
         ),
       },
-      { name: "StopSequenceList", description: "Drag (or keyboard) to reorder stops; recalculate appears once the order is dirty.", render: () => <StopSequenceDemo /> },
+      { name: "StopSequenceList", description: "Drag (or keyboard) to reorder stops. Completed stops are locked (no handle, can't be moved or passed); recalculate appears once the order is dirty. Pass disabled for a fully read-only list.", render: () => <StopSequenceDemo /> },
     ],
   },
   {
@@ -301,6 +464,11 @@ export const MAP_CATEGORIES: Category[] = [
     title: "Logistics · rider app",
     blurb: "How the rider sees the route + stops. Built React-first; mirrored to Jetpack Compose via the spec in the knowledge vault.",
     demos: [
+      {
+        name: "Rider app — route screen (mockup)",
+        description: "Full screen: live map with the route ahead (driver → active → upcoming), progress, the active stop with actions, and the uncompleted stops reorderable by drag. Completed stops are locked.",
+        render: () => <RiderAppMockup />,
+      },
       {
         name: "RouteProgress",
         description: "At-a-glance progress + trip ETA, top of the rider screen.",

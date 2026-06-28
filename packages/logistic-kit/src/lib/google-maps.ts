@@ -80,3 +80,11 @@ export function loadGoogleMaps(apiKey?: string): Promise<any> {
 
   return loaderPromise
 }
+
+/**
+ * Reuse one session token across an autocomplete→details exchange to stay in the
+ * cheaper per-session billing bucket. Issue a fresh token after each getDetails.
+ */
+export function createSessionToken(maps: any): any {
+  return new maps.places.AutocompleteSessionToken()
+}
