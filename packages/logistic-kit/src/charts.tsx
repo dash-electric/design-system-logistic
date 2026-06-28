@@ -11,21 +11,41 @@ import { routeColor } from "./lib/route-colors"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "./chart"
 
 /**
- * Opinionated, GSM-themed charts on top of recharts + ChartContainer. Every
- * series color defaults to routeColor(index) (operational categorical palette,
- * exempt from the one-accent rule). Axes are ink-soft, grid is a gray-200
- * hairline, numbers are tabular. Drop any of these inside a <ChartCard>.
+ * Opinionated, GSM-themed charts on top of recharts + ChartContainer.
+ *
+ * Color policy (GSM §3 — "color is information, not decoration"): series default
+ * to the INK RAMP, not a rainbow. Reach for chromatic color only when it carries
+ * meaning:
+ *   • `categorical` → series map to distinct operational entities (hubs, vehicles,
+ *     routes). Uses routeColor() — the same field-app palette the GSM exempts as
+ *     "operational data, not brand."
+ *   • status → pass `color` per series for success/warning/error (green/amber/red).
+ *   • purple (#5E2AAC) → punctuation: the one highlighted point, or the line over
+ *     bars in a combo. Never a default fill.
+ *
+ * Axes are ink-soft, grid is a gray-200 hairline, numbers are tabular. Drop any
+ * of these inside a <ChartCard>.
  */
 
 export type ChartSeries = { key: string; label?: string; color?: string }
 
-function useChartConfig(series: ChartSeries[]): ChartConfig {
+/** Ink-first neutral ramp for non-categorical series. Distinguishable by value,
+ *  not hue — a single series reads as ink, a second as mid-grey, and so on. */
+const NEUTRAL_SERIES = ["#171717", "#5C5C5C", "#A3A3A3", "#CFCFCF"]
+const ACCENT = "#5E2AAC"
+
+function seriesColor(s: ChartSeries, i: number, categorical: boolean): string {
+  if (s.color) return s.color
+  return categorical ? routeColor(i) : NEUTRAL_SERIES[Math.min(i, NEUTRAL_SERIES.length - 1)]
+}
+
+function useChartConfig(series: ChartSeries[], categorical = false): ChartConfig {
   return React.useMemo(
     () =>
       Object.fromEntries(
-        series.map((s, i) => [s.key, { label: s.label ?? s.key, color: s.color ?? routeColor(i) }]),
+        series.map((s, i) => [s.key, { label: s.label ?? s.key, color: seriesColor(s, i, categorical) }]),
       ) as ChartConfig,
-    [series],
+    [series, categorical],
   )
 }
 
@@ -37,6 +57,10 @@ type BaseProps = {
   xKey: string
   height?: number
   className?: string
+  /** Series map to distinct operational entities (hubs, vehicles, routes) → use
+   *  the categorical palette. Default false: series render in the ink ramp and
+   *  color stays reserved for status (pass `color` per series). */
+  categorical?: boolean
 }
 
 const axisProps = { tickLine: false, axisLine: false, tickMargin: 8 } as const
@@ -56,7 +80,7 @@ export type SparklineProps = {
   className?: string
 }
 export function Sparkline({ data, dataKey = "value", color, height = 36, area = true, className }: SparklineProps) {
-  const c = color ?? routeColor(0)
+  const c = color ?? NEUTRAL_SERIES[0]
   return (
     <div className={cn("w-full", className)} style={{ height }} data-slot="sparkline">
       <ResponsiveContainer width="100%" height="100%">
@@ -75,8 +99,8 @@ export function Sparkline({ data, dataKey = "value", color, height = 36, area = 
 }
 
 /* ── TrendLineChart — multi-series time series ──────────────────────────── */
-export function TrendLineChart({ data, series, xKey, height = 240, className, curved = true }: BaseProps & { curved?: boolean }) {
-  const config = useChartConfig(series)
+export function TrendLineChart({ data, series, xKey, height = 240, className, curved = true, categorical = false }: BaseProps & { curved?: boolean }) {
+  const config = useChartConfig(series, categorical)
   return (
     <ChartContainer config={config} className={frame(height, className)} style={{ height }}>
       <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
@@ -93,8 +117,8 @@ export function TrendLineChart({ data, series, xKey, height = 240, className, cu
 }
 
 /* ── TrendAreaChart — volume over time (single or stacked) ───────────────── */
-export function TrendAreaChart({ data, series, xKey, height = 240, className, stacked }: BaseProps & { stacked?: boolean }) {
-  const config = useChartConfig(series)
+export function TrendAreaChart({ data, series, xKey, height = 240, className, stacked, categorical = false }: BaseProps & { stacked?: boolean }) {
+  const config = useChartConfig(series, categorical)
   return (
     <ChartContainer config={config} className={frame(height, className)} style={{ height }}>
       <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
@@ -111,8 +135,8 @@ export function TrendAreaChart({ data, series, xKey, height = 240, className, st
 }
 
 /* ── CompareBarChart — grouped bars (vertical or horizontal) ────────────── */
-export function CompareBarChart({ data, series, xKey, height = 240, className, horizontal }: BaseProps & { horizontal?: boolean }) {
-  const config = useChartConfig(series)
+export function CompareBarChart({ data, series, xKey, height = 240, className, horizontal, categorical = false }: BaseProps & { horizontal?: boolean }) {
+  const config = useChartConfig(series, categorical)
   return (
     <ChartContainer config={config} className={frame(height, className)} style={{ height }}>
       <BarChart data={data} layout={horizontal ? "vertical" : "horizontal"} margin={{ top: 8, right: 8, bottom: 0, left: horizontal ? 8 : -8 }}>
@@ -138,8 +162,8 @@ export function CompareBarChart({ data, series, xKey, height = 240, className, h
 }
 
 /* ── StackedBarChart — composition per category ─────────────────────────── */
-export function StackedBarChart({ data, series, xKey, height = 240, className }: BaseProps) {
-  const config = useChartConfig(series)
+export function StackedBarChart({ data, series, xKey, height = 240, className, categorical = true }: BaseProps) {
+  const config = useChartConfig(series, categorical)
   return (
     <ChartContainer config={config} className={frame(height, className)} style={{ height }}>
       <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
@@ -165,7 +189,14 @@ export type ComboChartProps = {
   className?: string
 }
 export function ComboChart({ data, xKey, bars, lines, height = 240, className }: ComboChartProps) {
-  const config = useChartConfig([...bars, ...lines])
+  // Bars default to the ink ramp; the overlaid line defaults to the purple accent
+  // (punctuation against the ink mass). Pass `color` per series to override.
+  const config = React.useMemo(() => {
+    const e: Record<string, { label: string; color: string }> = {}
+    bars.forEach((s, i) => (e[s.key] = { label: s.label ?? s.key, color: s.color ?? NEUTRAL_SERIES[Math.min(i, NEUTRAL_SERIES.length - 1)] }))
+    lines.forEach((s) => (e[s.key] = { label: s.label ?? s.key, color: s.color ?? ACCENT }))
+    return e as ChartConfig
+  }, [bars, lines])
   return (
     <ChartContainer config={config} className={frame(height, className)} style={{ height }}>
       <ComposedChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
@@ -223,8 +254,11 @@ export function DonutChart({ data, height = 240, centerLabel, centerValue, class
 /* ── FunnelChart — delivery funnel ──────────────────────────────────────── */
 export type FunnelDatum = { key: string; label: string; value: number; color?: string }
 export function DeliveryFunnelChart({ data, height = 260, className }: { data: FunnelDatum[]; height?: number; className?: string }) {
-  const rows = data.map((d, i) => ({ ...d, name: d.label, fill: d.color ?? routeColor(i) }))
-  const config = Object.fromEntries(data.map((d, i) => [d.key, { label: d.label, color: d.color ?? routeColor(i) }])) as ChartConfig
+  // Funnel stages are sequential steps, not distinct entities — the narrowing
+  // width already encodes the drop-off, so stages share one neutral fill (white
+  // labels stay AA-legible on Neutral). Pass `color` to flag a problem stage.
+  const rows = data.map((d) => ({ ...d, name: d.label, fill: d.color ?? "#5C5C5C" }))
+  const config = Object.fromEntries(data.map((d) => [d.key, { label: d.label, color: d.color ?? "#5C5C5C" }])) as ChartConfig
   return (
     <ChartContainer config={config} className={frame(height, className)} style={{ height }}>
       <FunnelChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
@@ -240,8 +274,8 @@ export function DeliveryFunnelChart({ data, height = 260, className }: { data: F
 
 /* ── ScatterPlot — distribution (x vs y) ────────────────────────────────── */
 export type ScatterSeries = { key: string; label?: string; color?: string; points: { x: number; y: number; z?: number }[] }
-export function ScatterPlot({ groups, xLabel, yLabel, height = 240, className }: { groups: ScatterSeries[]; xLabel?: string; yLabel?: string; height?: number; className?: string }) {
-  const config = useChartConfig(groups)
+export function ScatterPlot({ groups, xLabel, yLabel, height = 240, className, categorical = false }: { groups: ScatterSeries[]; xLabel?: string; yLabel?: string; height?: number; className?: string; categorical?: boolean }) {
+  const config = useChartConfig(groups, categorical)
   return (
     <ChartContainer config={config} className={frame(height, className)} style={{ height }}>
       <ScatterChart margin={{ top: 8, right: 8, bottom: 4, left: -8 }}>
@@ -261,11 +295,13 @@ export function ScatterPlot({ groups, xLabel, yLabel, height = 240, className }:
 /* ── RadialGauge — utilization gauge (one or more rings) ────────────────── */
 export type GaugeDatum = { key: string; label?: string; value: number; color?: string }
 export function RadialGauge({ data, height = 200, max = 100, centerValue, centerLabel, className }: { data: GaugeDatum[]; height?: number; max?: number; centerValue?: React.ReactNode; centerLabel?: React.ReactNode; className?: string }) {
+  // The figure in the center is the information; the ring defaults to ink. Pass
+  // `color` for status (green = healthy, amber = warning, red = over).
   const config = React.useMemo(
-    () => Object.fromEntries(data.map((d, i) => [d.key, { label: d.label ?? d.key, color: d.color ?? routeColor(i) }])) as ChartConfig,
+    () => Object.fromEntries(data.map((d) => [d.key, { label: d.label ?? d.key, color: d.color ?? NEUTRAL_SERIES[0] }])) as ChartConfig,
     [data],
   )
-  const rows = data.map((d, i) => ({ ...d, name: d.label ?? d.key, fill: d.color ?? routeColor(i) }))
+  const rows = data.map((d) => ({ ...d, name: d.label ?? d.key, fill: d.color ?? NEUTRAL_SERIES[0] }))
   return (
     <div className={cn("relative", className)} style={{ height }} data-slot="radial-gauge">
       <ChartContainer config={config} className="aspect-auto size-full">

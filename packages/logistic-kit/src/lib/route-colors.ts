@@ -3,15 +3,18 @@
  * the GSM map canvas. Single source of truth shared by StopMarker, RoutePolyline,
  * MapLegend, and the dispatch panel chips, so a batch's color matches everywhere.
  *
- * Ported from react-logistic-web (BATCH_COLORS). These are OPERATIONAL data
- * colors (each route distinct), exempt from the GSM one-accent rule. The same
- * hex values are mirrored in the Android Compose token table so web and native
- * render identical batch colors.
+ * GSM-first: index 0 is INK. A single route/stop (the common case) is therefore
+ * black by default — color only appears once there's more than one route to tell
+ * apart, where indices 1+ supply the distinct operational hues (ported from
+ * react-logistic-web BATCH_COLORS). These chromatic entries are OPERATIONAL data,
+ * exempt from the one-accent rule. Mirror this order in the Android Compose token
+ * table so web and native render identical batch colors.
  *
- * 13 entries: covers a typical hub-day plan before wrapping; beyond that the
- * index cycles (dispatchers read batches in per-rider groups anyway).
+ * 14 entries (ink + 13 hues): covers a typical hub-day plan before wrapping;
+ * beyond that the index cycles (dispatchers read batches in per-rider groups).
  */
 export const ROUTE_COLORS = [
+  "#171717", // ink — default / single route
   "#2563eb", // blue
   "#16a34a", // green
   "#dc2626", // red

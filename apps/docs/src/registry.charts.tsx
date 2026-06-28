@@ -50,11 +50,11 @@ const funnel = [
 
 const scatter = [
   {
-    key: "ontime", label: "On time", color: undefined,
+    key: "ontime", label: "On time", color: undefined, // ink default
     points: Array.from({ length: 22 }, (_, i) => ({ x: 4 + (i % 11) * 1.6, y: 8 + ((i * 37) % 40), z: 60 + (i % 5) * 30 })),
   },
   {
-    key: "late", label: "Late", color: undefined,
+    key: "late", label: "Late", color: "#FB3748", // status red
     points: Array.from({ length: 12 }, (_, i) => ({ x: 12 + (i % 8) * 2.1, y: 40 + ((i * 53) % 45), z: 50 + (i % 4) * 35 })),
   },
 ]
@@ -103,7 +103,7 @@ export const CHART_CATEGORIES: Category[] = [
     id: "charts",
     title: "Charts & data viz",
     blurb:
-      "Operational charts on recharts, themed to the GSM — ink-soft axes, gray-200 hairline grids, tabular numerals, and the routeColor categorical palette (exempt from the one-accent rule). Drop any chart inside a ChartCard for the standard frame + loading/empty/error states.",
+      "Operational charts on recharts, themed to the GSM. Color is information, not decoration: series default to the ink ramp, status uses red/amber/green, purple is punctuation, and the bright categorical palette (routeColor) is opt-in via `categorical` only when series map to distinct operational entities (hubs, vehicles, routes). Ink-soft axes, gray-200 hairline grids, tabular numerals. Drop any chart inside a ChartCard for the frame + loading/empty/error states.",
     demos: [
       {
         name: "ChartCard",
@@ -159,7 +159,7 @@ export const CHART_CATEGORIES: Category[] = [
         description: "Volume over time, stacked by hub.",
         render: () => (
           <ChartCard title="Parcel volume by hub" eyebrow="This week" className="w-full max-w-2xl">
-            <TrendAreaChart data={volumeByHub} xKey="day" series={hubSeries} stacked />
+            <TrendAreaChart data={volumeByHub} xKey="day" series={hubSeries} stacked categorical />
           </ChartCard>
         ),
       },
