@@ -826,7 +826,8 @@ const BASE_CATEGORIES: Category[] = [
 import { MORE_CATEGORIES } from "./registry.more"
 import { MAP_CATEGORIES } from "./registry.maps"
 import { CHART_CATEGORIES } from "./registry.charts"
+import { TRACKING_CATEGORIES } from "./registry.tracking"
 
-export const CATEGORIES: Category[] = [...BASE_CATEGORIES, ...MORE_CATEGORIES, ...MAP_CATEGORIES, ...CHART_CATEGORIES]
+export const CATEGORIES: Category[] = [...BASE_CATEGORIES, ...MORE_CATEGORIES, ...MAP_CATEGORIES, ...TRACKING_CATEGORIES, ...CHART_CATEGORIES]
 
 export const TOTAL_COMPONENTS = CATEGORIES.reduce((n, c) => n + c.demos.length, 0)
